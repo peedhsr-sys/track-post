@@ -1,0 +1,17 @@
+<iframe width="100%" src="https://peedhsr3t.trackingmore.org/?page=tracking-page&mode=iframe" frameborder="0"></iframe>
+<script>
+	const iframe = document.querySelector("iframe");
+
+	const handleResize = (height) => {
+		iframe.style.height = height + 'px'
+	};
+
+	window.addEventListener('message', (event) => {
+		const { type, height } = event.data
+
+		if (type === 'resize') {
+			handleResize(height)
+		} else if (type === 'init') {
+			handleResize(height)
+		}
+	})</script>
