@@ -1,17 +1,75 @@
-<iframe width="100%" src="https://peedhsr3t.trackingmore.org/?page=tracking-page&mode=iframe" frameborder="0"></iframe>
-<script>
-	const iframe = document.querySelector("iframe");
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <title>पार्सल ट्रैक करें</title>
+</head>
+<body>
+    <h2>अपना कंसाइनमेंट नंबर डालें</h2>
+    <input type="text" id="trackId" placeholder="जैसे: PT123456789IN">
+    <button onclick="trackParcel()">Track</button>
+    <p id="result">यहाँ रिजल्ट आएगा...</p>
 
-	const handleResize = (height) => {
-		iframe.style.height = height + 'px'
-	};
+    <script>
+        function trackParcel() {
+            let number = document.getElementById("trackId").value;
+            document.getElementById("result").innerText = "कैप्चा सॉल्व हो रहा है, कृपया रुकें...";
+            
+            // यह तुम्हारे Python सर्वर से बात करेगा (नीचे अपना सर्वर लिंक डालना होगा)
+            fetch("https://तुम्हारा-python-सर्वर.com/track?number=" + number)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("result").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("result").innerText = "सर्वर एरर!";
+            });
+        }
+		from flask import Flask, request
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import pytesseract
+from PIL import Image
+import time
+from flask_cors import CORS # यह GitHub साइट को कनेक्ट करने देगा
 
-	window.addEventListener('message', (event) => {
-		const { type, height } = event.data
+app = Flask(__name__)
+CORS(app) 
 
-		if (type === 'resize') {
-			handleResize(height)
-		} else if (type === 'init') {
-			handleResize(height)
-		}
-	})</script>
+@app.route('/track', methods=['GET'])
+def track():
+    number = request.args.get('number')
+    
+    # 1. बैकग्राउंड में ब्राउज़र चलाना
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless') 
+    driver = webdriver.Chrome(options=options)
+
+    try:
+        # 2. इंडिया पोस्ट खोलना
+        driver.get("https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx")
+        time.sleep(2)
+
+        # 3. नंबर और कैप्चा भरना
+        driver.find_element(By.XPATH, "//input[contains(@id, 'txtConsignmentNumber')]").send_keys(number)
+        
+        driver.find_element(By.XPATH, "//img[contains(@id, 'imgCaptcha')]").screenshot("captcha.png")
+        captcha_text = pytesseract.image_to_string(Image.open("captcha.png")).strip()
+        
+        driver.find_element(By.XPATH, "//input[contains(@id, 'txtCaptcha')]").send_keys(captcha_text)
+        driver.find_element(By.XPATH, "//input[contains(@id, 'btnSearch')]").click()
+        time.sleep(3)
+
+        # 4. रिजल्ट वापस भेजना
+        result = driver.find_element(By.ID, "trackingPathTable").text
+        return result
+
+    except Exception as e:
+        return "एरर: कैप्चा सॉल्व नहीं हुआ या सर्वर काम नहीं कर रहा।"
+    finally:
+        driver.quit()
+
+if __name__ == '__main__':
+    app.run(port=5000)
+    </script>
+</body>
+</html>
