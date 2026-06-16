@@ -1,75 +1,90 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <title>पार्सल ट्रैक करें</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Post Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            color: #d32f2f;
+        }
+        input {
+            padding: 12px;
+            width: 70%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        #tracking-result {
+            margin-top: 30px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h2>अपना कंसाइनमेंट नंबर डालें</h2>
-    <input type="text" id="trackId" placeholder="जैसे: PT123456789IN">
-    <button onclick="trackParcel()">Track</button>
-    <p id="result">यहाँ रिजल्ट आएगा...</p>
 
-    <script>
-        function trackParcel() {
-            let number = document.getElementById("trackId").value;
-            document.getElementById("result").innerText = "कैप्चा सॉल्व हो रहा है, कृपया रुकें...";
+    <div class="container">
+        <h2>India Post Consignment Tracker</h2>
+        <p>अपना ट्रैकिंग नंबर नीचे दर्ज करें:</p>
+        
+        <input type="text" id="track-input" placeholder="उदाहरण: EA123456789IN">
+        <br>
+        <button onclick="trackPackage()">Track Data Fetch</button>
+
+        <!-- यहीं पर ट्रैकिंग का सीधा डेटा शो होगा -->
+        <div id="tracking-result"></div>
+    </div>
+
+    <!-- ट्रैकिंग सिस्टम को काम कराने वाली स्क्रिप्ट -->
+    <script type="text/javascript" src="//www.17track.net/externalcall.js"></script>
+    <script type="text/javascript">
+        function trackPackage() {
+            var trackingNumber = document.getElementById("track-input").value.trim();
             
-            // यह तुम्हारे Python सर्वर से बात करेगा (नीचे अपना सर्वर लिंक डालना होगा)
-            fetch("https://तुम्हारा-python-सर्वर.com/track?number=" + number)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("result").innerText = data;
-            })
-            .catch(error => {
-                document.getElementById("result").innerText = "सर्वर एरर!";
+            if(trackingNumber === ""){
+                alert("कृपया Consignment Number डालें!");
+                return;
+            }
+            
+            // यह कोड सीधे डेटा लाकर 'tracking-result' वाले डब्बे में डाल देगा
+            YQV5.trackMulti({
+                YQ_ContainerId: "tracking-result",
+                YQ_Height: 500,
+                YQ_Fc: "0",
+                YQ_Lang: "en",
+                YQ_Num: trackingNumber
             });
         }
-		from flask import Flask, request
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import pytesseract
-from PIL import Image
-import time
-from flask_cors import CORS # यह GitHub साइट को कनेक्ट करने देगा
-
-app = Flask(__name__)
-CORS(app) 
-
-@app.route('/track', methods=['GET'])
-def track():
-    number = request.args.get('number')
-    
-    # 1. बैकग्राउंड में ब्राउज़र चलाना
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless') 
-    driver = webdriver.Chrome(options=options)
-
-    try:
-        # 2. इंडिया पोस्ट खोलना
-        driver.get("https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx")
-        time.sleep(2)
-
-        # 3. नंबर और कैप्चा भरना
-        driver.find_element(By.XPATH, "//input[contains(@id, 'txtConsignmentNumber')]").send_keys(number)
-        
-        driver.find_element(By.XPATH, "//img[contains(@id, 'imgCaptcha')]").screenshot("captcha.png")
-        captcha_text = pytesseract.image_to_string(Image.open("captcha.png")).strip()
-        
-        driver.find_element(By.XPATH, "//input[contains(@id, 'txtCaptcha')]").send_keys(captcha_text)
-        driver.find_element(By.XPATH, "//input[contains(@id, 'btnSearch')]").click()
-        time.sleep(3)
-
-        # 4. रिजल्ट वापस भेजना
-        result = driver.find_element(By.ID, "trackingPathTable").text
-        return result
-
-    except Exception as e:
-        return "एरर: कैप्चा सॉल्व नहीं हुआ या सर्वर काम नहीं कर रहा।"
-    finally:
-        driver.quit()
-
-if __name__ == '__main__':
-    app.run(port=5000)
     </script>
+
 </body>
 </html>
