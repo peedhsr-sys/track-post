@@ -3,183 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Generator with Monkey Logo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <title>UP Birth Certificate Automation Layout</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2c3e50;
+            font-family: 'Roboto', 'Noto Sans Devanagari', sans-serif;
+            background-color: #3a3b3c;
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             flex-wrap: wrap;
         }
 
-        /* Form Area */
-        .input-panel {
-            background: #ecf0f1;
+        /* --- Left Control Panel --- */
+        .control-panel {
+            background: #ffffff;
             padding: 20px;
             width: 100%;
-            max-width: 350px;
+            max-width: 360px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             height: fit-content;
         }
-        .input-panel h3 { margin-top: 0; color: #333; text-align: center; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #bdc3c7; border-radius: 4px; }
-        .btn-download { width: 100%; padding: 12px; background: #e74c3c; color: white; border: none; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
-        .btn-download:hover { background: #c0392b; }
-
-        /* Certificate A4 Area */
-        .cert-paper {
-            background: white;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 15mm;
+        .control-panel h2 {
+            margin-top: 0;
+            font-size: 16px;
+            text-align: center;
+            color: #111;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 8px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            color: #333;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 6px 8px;
             box-sizing: border-box;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .download-btn {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        /* --- Right A4 Layout --- */
+        .a4-page {
+            background: #ffffff;
+            width: 210mm;
+            height: 297mm;
+            padding: 12mm;
+            box-sizing: border-box;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            position: relative;
+            color: #000000;
+        }
+
+        .outer-border {
+            border: 2px solid #000000;
+            height: 100%;
+            width: 100%;
+            padding: 25px;
+            box-sizing: border-box;
             position: relative;
         }
 
-        .cert-border {
-            border: 2px solid #000;
-            height: 100%;
-            padding: 25px;
-            box-sizing: border-box;
+        /* Top Bar Layout */
+        .top-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1.3;
         }
 
-        .top-row { font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-        
-        .logo-center { text-align: center; margin-bottom: 10px; }
-        .logo-center img { width: 85px; height: 85px; }
+        .qr-holder {
+            width: 85px;
+            height: 85px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .headings { text-align: center; line-height: 1.5; }
-        .headings h1 { font-size: 20px; margin: 0; text-transform: uppercase; font-weight: bold; }
-        .headings h2 { font-size: 14px; margin: 5px 0; }
-        
-        .sub-text { text-align: center; font-size: 11px; margin: 10px 0; }
-        .dashed-line { border-top: 1px dashed #000; margin: 15px 0; }
-        .cert-name { text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 20px; }
+        /* Header Elements */
+        .header-section {
+            text-align: center;
+            margin-top: -15px;
+        }
+        .form-no-tag {
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .logo-space {
+            text-align: center;
+            margin: 5px 0;
+        }
+        .logo-space img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
+        .state-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin: 2px 0;
+        }
+        .authority-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 2px 0;
+        }
 
-        /* Data Grid */
-        .info-table { width: 100%; border-collapse: collapse; }
-        .info-table tr { border-bottom: 1px dotted #888; }
-        .info-table td { padding: 10px 0; font-size: 13px; }
-        .info-table .col-label { width: 40%; font-weight: bold; }
-        .info-table .col-value { width: 60%; font-weight: bold; text-transform: uppercase; }
+        /* Legal Act Citation Box */
+        .act-citation {
+            text-align: center;
+            font-size: 10.5px;
+            line-height: 1.3;
+            margin: 8px auto;
+            max-width: 95%;
+            font-weight: normal;
+        }
 
-        /* Footer */
-        .footer-area {
-            position: absolute;
-            bottom: 30px;
-            left: 25px;
-            right: 25px;
+        .divider-line {
+            border-top: 1px dashed #000000;
+            margin: 12px 0;
+        }
+
+        .doc-main-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .certified-declaration {
+            text-align: center;
+            font-size: 11.5px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* --- Exact Dotted Grid Layout --- */
+        .details-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+        .details-grid tr {
+            border-bottom: 1px dotted #555555;
+        }
+        .details-grid td {
+            padding: 8px 0;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+        .left-label {
+            width: 40%;
+            font-weight: bold;
+        }
+        .right-value {
+            width: 60%;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* --- Bottom Footer & Digital Signatures --- */
+        .footer-container {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            font-size: 12px;
-        }
-        .sign-box {
-            border: 1px dashed #333;
-            padding: 8px;
-            text-align: left;
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
             font-size: 11px;
+        }
+        .footer-left {
+            width: 50%;
             line-height: 1.4;
+            font-weight: bold;
+        }
+        .footer-right {
+            width: 45%;
+            text-align: left;
+        }
+        .signature-details-block {
+            border: 1px dashed #000000;
+            padding: 8px;
+            font-size: 10.5px;
+            line-height: 1.4;
+            background: #ffffff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .verification-link {
+            margin-top: 5px;
+            font-size: 10px;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
 
-    <!-- Left Form -->
-    <div class="input-panel">
-        <h3>डिटेल भरें</h3>
-        <div class="form-group">
-            <label>क्रम संख्या / S.No:</label>
-            <input type="text" id="val_sno" value="54831987799111">
+    <div class="control-panel">
+        <h2>DATA ENTRY INTERFACE</h2>
+        
+        <div class="input-group">
+            <label>S.No / क्रम संख्या:</label>
+            <input type="text" id="in_sno" value="54831987799111">
         </div>
-        <div class="form-group">
-            <label>नाम / Name:</label>
-            <input type="text" id="val_name" value="PRIYANSHI PRAJAPATI">
+        <div class="input-group">
+            <label>Name / नाम:</label>
+            <input type="text" id="in_name" value="PRIYANSHI PRAJAPATI">
         </div>
-        <div class="form-group">
-            <label>लिंग / Sex:</label>
-            <input type="text" id="val_sex" value="FEMALE">
+        <div class="input-group">
+            <label>Sex / लिंग:</label>
+            <input type="text" id="in_sex" value="FEMALE">
         </div>
-        <div class="form-group">
-            <label>जन्म तिथि / DOB & Place:</label>
-            <input type="text" id="val_dob" value="10/03/2025, CHC GORAKHPUR">
+        <div class="input-group">
+            <label>Date of Birth & Place / जन्म का दिनांक एवं स्थान:</label>
+            <input type="text" id="in_dob" value="10/03/2025, CHC GORAKHPUR">
         </div>
-        <div class="form-group">
-            <label>पिता का नाम / Father's Name:</label>
-            <input type="text" id="val_father" value="SONU KUMAR PRAJAPATI">
+        <div class="input-group">
+            <label>Father's Name / पिता का नाम:</label>
+            <input type="text" id="in_father" value="SONU KUMAR PRAJAPATI">
         </div>
-        <div class="form-group">
-            <label>माता का नाम / Mother's Name:</label>
-            <input type="text" id="val_mother" value="REETA KUMARI PRAJAPATI">
+        <div class="input-group">
+            <label>Mother's Name / माता का नाम:</label>
+            <input type="text" id="in_mother" value="REETA KUMARI PRAJAPATI">
         </div>
-        <button class="btn-download" onclick="createPDF()">Download PDF</button>
+        <div class="input-group">
+            <label>Registration No / पंजीकरण संख्या:</label>
+            <input type="text" id="in_regno" value="54831987799111">
+        </div>
+        <div class="input-group">
+            <label>Date of Registration / पंजीकरण की तिथि:</label>
+            <input type="text" id="in_regdate" value="17-06-2026">
+        </div>
+        <div class="input-group">
+            <label>Issued Date / जारी तिथि:</label>
+            <input type="text" id="in_issuedate" value="04-07-2026">
+        </div>
+        <div class="input-group">
+            <label>Place/District / स्थान / जिला:</label>
+            <input type="text" id="in_district" value="SARAIYA LATHAURWA TOLA, SARAIYA, POST SARDAR NAGAR, GORAKHPUR, UTTAR PRADESH -273202">
+        </div>
+        <div class="input-group">
+            <label>Signed Date & Code / हस्ताक्षर तिथि व कोड:</label>
+            <input type="text" id="in_signinfo" value="Signed on: 04/07/2026 Code: 45012345">
+        </div>
+
+        <button class="download-btn" onclick="generatePerfectPDF()">Download PDF</button>
     </div>
 
-    <!-- Right Certificate -->
-    <div class="cert-paper" id="pdf_content">
-        <div class="cert-border">
+    <div class="a4-page" id="printable_document_area">
+        <div class="outer-border">
             
-            <div class="top-row">क्रम संख्या / S.No: <span id="out_sno">54831987799111</span></div>
-
-            <!-- Monkey Logo Image -->
-            <div class="logo-center">
-                <img src="https://img.icons8.com/color/96/000000/monkey.png" alt="Monkey Logo">
+            <div class="top-meta-bar">
+                <div>क्रम संख्या / S.No: <span id="out_sno">54831987799111</span></div>
+                <div class="qr-holder" id="dynamic_qr_box"></div>
             </div>
 
-            <div class="headings">
-                <h1>DEMO PRADESH</h1>
-                <h2>नगर निगम / MUNICIPAL CORPORATION</h2>
+            <div class="header-section">
+                <div class="form-no-tag">प्रपत्र सं. - 5 / Form No.5</div>
+                
+                <div class="logo-space">
+                    <img src="https://img.icons8.com/color/96/000000/monkey.png" alt="Logo Container">
+                </div>
+
+                <div class="state-title">उत्तर Pradesh सरकार / Government Of Uttar Pradesh</div>
+                <div class="authority-title">गोरखपुर नगर निगम / GORAKHPUR MUNICIPAL CORPORATION</div>
             </div>
 
-            <div class="sub-text">
-                (जन्म-मृत्यु रजिस्ट्रीकरण अधिनियम 1969 के अंतर्गत जारी)<br>
-                (Issued under the Registration of Births and Deaths Act 1969)
+            <div class="act-citation">
+                (जन्म-मृत्यु रजिस्ट्रीकरण अधिनियम 1969 की धारा 12/17 एवं उत्तर प्रदेश जन्म मृत्यु रजिस्ट्रीकरण नियमावली 2003 के नियम 8 के अंतर्गत जारी)<br>
+                (Issued under the Section 12/17 of the Registration of Births and Deaths Act 1969 and under rule 8 of Uttar Pradesh, Registration of Births and Deaths Rules 2003)
             </div>
 
-            <div class="dashed-line"></div>
+            <div class="divider-line"></div>
 
-            <div class="cert-name">(जन्म प्रमाण पत्र) / (Birth Certificate)</div>
+            <div class="doc-main-title">(जन्म प्रमाण पत्र) / (Birth Certificate)</div>
 
-            <table class="info-table">
+            <div class="certified-declaration">
+                प्रमाणित किया जाता है कि निम्नलिखित सूचना जन्म के मूल अभिलेख से ली गई है जो कि (स्थानीय क्षेत्र) गोरखपुर नगर निगम, राज्य उत्तर प्रदेश के रजिस्टर में अंकित है।<br>
+                This is to certify that the following information has been taken from the original record of birth which is in the register for Gorakhpur Municipal Corporation State U.P.
+            </div>
+
+            <table class="details-grid">
                 <tr>
-                    <td class="col-label">नाम / Name:</td>
-                    <td class="col-value" id="out_name">PRIYANSHI PRAJAPATI</td>
+                    <td class="left-label">नाम / Name:</td>
+                    <td class="right-value" id="out_name">PRIYANSHI PRAJAPATI</td>
                 </tr>
                 <tr>
-                    <td class="col-label">लिंग / Sex:</td>
-                    <td class="col-value" id="out_sex">FEMALE</td>
+                    <td class="left-label">लिंग / Sex:</td>
+                    <td class="right-value" id="out_sex">FEMALE</td>
                 </tr>
                 <tr>
-                    <td class="col-label">जन्म का दिनांक एवं स्थान / DOB & Place:</td>
-                    <td class="col-value" id="out_dob">10/03/2025, CHC GORAKHPUR</td>
+                    <td class="left-label">जन्म का दिनांक एवं स्थान / Date of Birth & Place:</td>
+                    <td class="right-value" id="out_dob">10/03/2025, CHC GORAKHPUR</td>
                 </tr>
                 <tr>
-                    <td class="col-label">पिता का नाम / Name of Father:</td>
-                    <td class="col-value" id="out_father">SONU KUMAR PRAJAPATI</td>
+                    <td class="left-label">पिता का नाम / Name of Father:</td>
+                    <td class="right-value" id="out_father">SONU KUMAR PRAJAPATI</td>
                 </tr>
                 <tr>
-                    <td class="col-label">माता का नाम / Name of Mother:</td>
-                    <td class="col-value" id="out_mother">REETA KUMARI PRAJAPATI</td>
+                    <td class="left-label">माता का नाम / Name of Mother:</td>
+                    <td class="right-value" id="out_mother">REETA KUMARI PRAJAPATI</td>
+                </tr>
+                <tr>
+                    <td class="left-label">पंजीकरण संख्या / Registration No:</td>
+                    <td class="right-value" id="out_regno">54831987799111</td>
+                </tr>
+                <tr>
+                    <td class="left-label">पंजीकरण की तिथि / Date of Registration:</td>
+                    <td class="right-value" id="out_regdate">17-06-2026</td>
+                </tr>
+                <tr>
+                    <td class="left-label">जारी तिथि / Issued Date:</td>
+                    <td class="right-value" id="out_issuedate">04-07-2026</td>
+                </tr>
+                <tr>
+                    <td class="left-label">स्थान / जिला / Place/District:</td>
+                    <td class="right-value" id="out_district">SARAIYA LATHAURWA TOLA, SARAIYA, POST SARDAR NAGAR, GORAKHPUR, UTTAR PRADESH -273202</td>
                 </tr>
             </table>
 
-            <div class="footer-area">
-                <div>प्रत्येक जन्म एवं मृत्यु का पंजीकरण सुनिश्चित करें।</div>
-                <div class="sign-box">
-                    <strong>Digitally Signed by:</strong><br>
-                    MR. DEMO OFFICER<br>
-                    उप-रजिस्ट्रार (सब-रजिस्ट्रार)
+            <div class="footer-container">
+                <div class="footer-left">
+                    प्रत्येक जन्म एवं मृत्यु का पंजीकरण सुनिश्चित करें / Ensure registration of every birth and death<br>
+                    <div class="verification-link">For Certificate Verification please visit http://www.e-nagarsewaup.gov.in/ulbapps</div>
+                </div>
+                
+                <div class="footer-right">
+                    <div class="signature-details-block">
+                        <strong>Digitally Signed by</strong><br>
+                        DR. AWADHESH KUMAR YADAV<br>
+                        उप-रजिस्ट्रार (जन्म एवं मृत्यु)<br>
+                        SUB-REGISTRAR (BIRTH & DEATH)<br>
+                        GORAKHPUR MUNICIPAL CORPORATION<br>
+                        <span id="out_signinfo" style="font-size: 9.5px; font-weight: bold;">Signed on: 04/07/2026 Code: 45012345</span>
+                    </div>
                 </div>
             </div>
 
@@ -187,25 +380,61 @@
     </div>
 
     <script>
-        const fields = ['sno', 'name', 'sex', 'dob', 'father', 'mother'];
-        
-        fields.forEach(field => {
-            const input = document.getElementById('val_' + field);
-            const output = document.getElementById('out_' + field);
-            input.addEventListener('input', () => {
-                output.innerText = input.value;
+        // Mapping definition array between Input elements and Output Display fields
+        const elementsMap = [
+            ['in_sno', 'out_sno'],
+            ['in_name', 'out_name'],
+            ['in_sex', 'out_sex'],
+            ['in_dob', 'out_dob'],
+            ['in_father', 'out_father'],
+            ['in_mother', 'out_mother'],
+            ['in_regno', 'out_regno'],
+            ['in_regdate', 'out_regdate'],
+            ['in_issuedate', 'out_issuedate'],
+            ['in_district', 'out_district'],
+            ['in_signinfo', 'out_signinfo']
+        ];
+
+        const nameInputElement = document.getElementById('in_name');
+        const qrWrapperBox = document.getElementById("dynamic_qr_box");
+
+        // QR engine setup linking the input name box string contents
+        let qrcodeObjectInstance = new QRCode(qrWrapperBox, {
+            text: nameInputElement.value,
+            width: 80,
+            height: 80,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Event synchronization loop to mirror text field entries onto the template paper frame
+        elementsMap.forEach(group => {
+            const currentInput = document.getElementById(group[0]);
+            const currentOutput = document.getElementById(group[1]);
+            
+            currentInput.addEventListener('input', () => {
+                currentOutput.innerText = currentInput.value;
+                
+                // Live dynamic update trigger for scanning data array string
+                if(group[0] === 'in_name') {
+                    qrcodeObjectInstance.clear();
+                    qrcodeObjectInstance.makeCode(currentInput.value);
+                }
             });
         });
 
-        function createPDF() {
-            const element = document.getElementById('pdf_content');
-            html2pdf().set({
-                margin: 0,
-                filename: 'Demo_Monkey_Certificate.pdf',
-                image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
+        // Exact rendering parameters exporting logic to clear A4 format PDF block
+        function generatePerfectPDF() {
+            const structureTarget = document.getElementById('printable_document_area');
+            const targetConfig = {
+                margin:       0,
+                filename:     'Official_Structured_Report.pdf',
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 3, useCORS: true }, 
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(targetConfig).from(structureTarget).save();
         }
     </script>
 </body>
