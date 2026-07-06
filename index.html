@@ -3,333 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Perfect Certificate Generator with QR</title>
+    <title>Automated Certificate Generator with Live QR</title>
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Arial:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- PDF Generating Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
-    <!-- Dynamic QR Code Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         body {
-            font-family: Arial, 'Noto Sans Devanagari', sans-serif;
-            background-color: #444;
+            font-family: 'Roboto', 'Noto Sans Devanagari', sans-serif;
+            background-color: #3a3b3c;
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             flex-wrap: wrap;
         }
 
-        /* --- Input Form Section --- */
-        .form-panel {
-            background: #fff;
-            padding: 20px;
+        /* --- Left Side: Input Form Interface --- */
+        .interface-panel {
+            background: #ffffff;
+            padding: 25px;
             width: 100%;
             max-width: 380px;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             height: fit-content;
         }
-        .form-panel h3 { margin: 0 0 15px 0; color: #333; text-align: center; }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 3px; color: #555; }
-        .form-group input { width: 100%; padding: 7px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .download-btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px; margin-top: 10px; }
-        .download-btn:hover { background: #0056b3; }
+        .interface-panel h2 {
+            margin-top: 0;
+            font-size: 18px;
+            text-align: center;
+            color: #111;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-field {
+            margin-bottom: 12px;
+        }
+        .form-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #444;
+        }
+        .form-field input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .action-btn:hover {
+            background: #0056b3;
+        }
 
-        /* --- Certificate A4 Sheet --- */
-        .a4-page {
-            background: white;
+        /* --- Right Side: A4 Document Layout --- */
+        .a4-document {
+            background: #ffffff;
             width: 210mm;
             height: 297mm;
-            padding: 12mm;
+            padding: 15mm;
             box-sizing: border-box;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             position: relative;
         }
 
-        /* Exact Border Layout From Image */
-        .outer-border {
-            border: 2px solid #000;
-            width: 100%;
+        /* Border Structure matching original style */
+        .inner-border-frame {
+            border: 2px solid #000000;
             height: 100%;
-            padding: 25px;
+            width: 100%;
+            padding: 20px;
             box-sizing: border-box;
             position: relative;
         }
 
-        /* Header Layout */
-        .top-meta {
+        /* Top Header Info Row */
+        .top-meta-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            width: 100%;
-        }
-        
-        .logo-area {
-            text-align: center;
-            margin: 5px 0 15px 0;
-        }
-        /* Custom Uploaded Logo Style */
-        .logo-area img {
-            width: 75px;
-            height: 75px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
         }
 
-        .heading-block {
-            text-align: center;
-            line-height: 1.5;
+        /* QR Code Top Right Alignment */
+        .qr-code-zone {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .heading-block h1 { font-size: 19px; margin: 0; font-weight: bold; letter-spacing: 0.5px; }
-        .heading-block h2 { font-size: 13px; margin: 3px 0; font-weight: bold; }
-        
-        .act-details {
+
+        /* Center Logo Design */
+        .center-logo-slot {
             text-align: center;
-            font-size: 10.5px;
+            margin: -10px 0 10px 0;
+        }
+        .center-logo-slot img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        /* Main Authority Headings */
+        .authority-text-block {
+            text-align: center;
             line-height: 1.4;
-            margin: 10px auto;
+        }
+        .authority-text-block h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .authority-text-block h2 {
+            font-size: 13px;
+            margin: 2px 0 8px 0;
+            font-weight: bold;
+        }
+
+        /* Legal Act References */
+        .legal-act-subtext {
+            text-align: center;
+            font-size: 10px;
+            line-height: 1.4;
+            margin: 5px auto;
             max-width: 90%;
         }
-        
-        .divider-dashed {
-            border-top: 1px dashed #000;
-            margin: 12px 0;
-            width: 100%;
+
+        .horizontal-dashed-line {
+            border-top: 1px dashed #000000;
+            margin: 10px 0;
         }
-        
-        .title-badge {
+
+        .document-type-title {
             text-align: center;
             font-size: 15px;
             font-weight: bold;
             margin: 10px 0;
         }
-        
-        .intro-text {
+
+        .official-declaration-text {
             text-align: center;
-            font-size: 11.5px;
-            margin-bottom: 25px;
+            font-size: 11px;
+            margin-bottom: 20px;
             line-height: 1.4;
         }
 
-        /* --- Pixel Perfect Grid Details (Table) --- */
-        .details-table {
+        /* --- Structured Fields Grid (Dotted Rows) --- */
+        .data-grid-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-        .details-table tr {
-            border-bottom: 1px dotted #aaa; /* Dotted lines as per image */
+        .data-grid-table tr {
+            border-bottom: 1px dotted #666666; /* Clean dotted separation */
         }
-        .details-table td {
-            padding: 10px 0;
+        .data-grid-table td {
+            padding: 9px 0;
             font-size: 12px;
-            vertical-align: top;
+            vertical-align: middle;
         }
-        .field-label {
-            width: 40%;
+        .label-cell {
+            width: 38%;
             font-weight: bold;
-            color: #000;
+            color: #000000;
         }
-        .field-value {
-            width: 60%;
+        .value-cell {
+            width: 62%;
             font-weight: bold;
             text-transform: uppercase;
-            color: #000;
+            color: #000000;
         }
 
-        /* --- Footer and Signatures --- */
-        .footer-block {
+        /* --- Bottom Layout & Signatures --- */
+        .bottom-footer-layout {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             position: absolute;
-            bottom: 30px;
-            left: 25px;
-            right: 25px;
+            bottom: 25px;
+            left: 20px;
+            right: 20px;
             font-size: 11px;
         }
-        .footer-msg {
+        .footer-left-note {
             width: 50%;
             line-height: 1.4;
         }
-        .signature-section {
+        .footer-right-signature {
             width: 45%;
             text-align: left;
         }
-        /* Dashed box for digital signature */
-        .digital-sign-container {
-            border: 1px dashed #000;
-            padding: 8px;
+        .digital-signature-box {
+            border: 1px dashed #000000;
+            padding: 6px;
             font-size: 10px;
             line-height: 1.4;
-            background: #fff;
-            display: inline-block;
+            background: #ffffff;
             width: 100%;
             box-sizing: border-box;
-        }
-
-        /* QR Code Styling (Top Right Corner inside header) */
-        #qrcode {
-            margin-top: -5px;
         }
     </style>
 </head>
 <body>
 
-    <!-- LEFT SIDE: CONTROLS -->
-    <div class="form-panel">
-        <h3>डिटेल बदलें</h3>
+    <div class="interface-panel">
+        <h2>DETAILS ENTER KAREIN</h2>
         
-        <div class="form-group">
-            <label>1. लोगो इमेज चुनें (Upload Logo)</label>
-            <input type="file" id="image_uploader" accept="image/*">
+        <div class="form-field">
+            <label>PC Se Logo Choose Karein:</label>
+            <input type="file" id="upload_logo_input" accept="image/*">
         </div>
-        <div class="form-group">
-            <label>क्रम संख्या / S.No:</label>
-            <input type="text" id="in_sno" value="54831987799111">
+        <div class="form-field">
+            <label>S.No / क्रम संख्या:</label>
+            <input type="text" id="field_sno" value="54831987799111">
         </div>
-        <div class="form-group">
-            <label>नाम / Name:</label>
-            <input type="text" id="in_name" value="PRIYANSHI PRAJAPATI">
+        <div class="form-field">
+            <label>Name / नाम (QR me yahi dikhega):</label>
+            <input type="text" id="field_name" value="PRIYANSHI PRAJAPATI">
         </div>
-        <div class="form-group">
-            <label>लिंग / Sex:</label>
-            <input type="text" id="in_sex" value="FEMALE">
+        <div class="form-field">
+            <label>Sex / लिंग:</label>
+            <input type="text" id="field_sex" value="FEMALE">
         </div>
-        <div class="form-group">
-            <label>जन्म तिथि व स्थान / DOB & Place:</label>
-            <input type="text" id="in_dob" value="10/03/2025, CHC GORAKHPUR">
+        <div class="form-field">
+            <label>DOB & Place / जन्म तिथि व स्थान:</label>
+            <input type="text" id="field_dob" value="10/03/2025, CHC GORAKHPUR">
         </div>
-        <div class="form-group">
-            <label>पिता का नाम / Father's Name:</label>
-            <input type="text" id="in_father" value="SONU KUMAR PRAJAPATI">
+        <div class="form-field">
+            <label>Father's Name / पिता का नाम:</label>
+            <input type="text" id="field_father" value="SONU KUMAR PRAJAPATI">
         </div>
-        <div class="form-group">
-            <label>माता का नाम / Mother's Name:</label>
-            <input type="text" id="in_mother" value="REETA KUMARI PRAJAPATI">
+        <div class="form-field">
+            <label>Mother's Name / माता का नाम:</label>
+            <input type="text" id="field_mother" value="REETA KUMARI PRAJAPATI">
         </div>
-        <div class="form-group">
-            <label>पंजीकरण संख्या / Reg No:</label>
-            <input type="text" id="in_regno" value="54831987799111">
+        <div class="form-field">
+            <label>Registration No / पंजीकरण संख्या:</label>
+            <input type="text" id="field_regno" value="54831987799111">
         </div>
-        <div class="form-group">
-            <label>पंजीकरण तिथि / Reg Date:</label>
-            <input type="text" id="in_regdate" value="17-06-2026">
+        <div class="form-field">
+            <label>Registration Date / पंजीकरण तिथि:</label>
+            <input type="text" id="field_regdate" value="17-06-2026">
         </div>
-        <div class="form-group">
-            <label>जारी तिथि / Issued Date:</label>
-            <input type="text" id="in_issue" value="04-07-2026">
+        <div class="form-field">
+            <label>Issued Date / जारी तिथि:</label>
+            <input type="text" id="field_issuedate" value="04-07-2026">
         </div>
-        <div class="form-group">
-            <label>स्थान / जिला / Place/District:</label>
-            <input type="text" id="in_dist" value="GORAKHPUR, UTTAR PRADESH">
+        <div class="form-field">
+            <label>Place/District / स्थान / जिला:</label>
+            <input type="text" id="field_district" value="GORAKHPUR, UTTAR PRADESH">
         </div>
 
-        <button class="download-btn" onclick="exportToPDF()">Download PDF</button>
+        <button class="action-btn" onclick="downloadDocumentPDF()">Download PDF</button>
     </div>
 
-    <!-- RIGHT SIDE: PREVIEW AREA -->
-    <div class="a4-page" id="cert_canvas">
-        <div class="outer-border">
+    <div class="a4-document" id="document_capture_area">
+        <div class="inner-border-frame">
             
-            <!-- Top Metadata and QR Code Area -->
-            <div class="top-meta">
-                <div>क्रम संख्या / S.No: <span id="out_sno">54831987799111</span></div>
-                <!-- Dynamic QR Code Container -->
-                <div id="qrcode"></div>
+            <div class="top-meta-row">
+                <div>क्रम संख्या / S.No: <span id="view_sno">54831987799111</span></div>
+                <div class="qr-code-zone" id="live_qr_element"></div>
             </div>
 
-            <!-- Logo -->
-            <div class="logo-area">
-                <!-- Default Placeholder Logo SVG -->
-                <img id="logo_preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23333'/><text x='50' y='55' font-size='16' text-anchor='middle' fill='white' font-family='Arial'>LOGO</text></svg>" alt="Logo">
+            <div class="center-logo-slot">
+                <img id="view_logo_img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23222'/><text x='50' y='55' font-size='14' text-anchor='middle' fill='white' font-family='Arial'>LOGO</text></svg>" alt="Logo">
             </div>
 
-            <!-- Headings -->
-            <div class="heading-block">
+            <div class="authority-text-block">
                 <h1>EXAMPLE OF PRADESH</h1>
-                <h2>गोरखपुर नगर निगम / GORAKHPUR MUNICIPAL CORPORATION</h2>
+                <h2>GORAKHPUR MUNICIPAL CORPORATION / गोरखपुर नगर निगम</h2>
             </div>
 
-            <div class="act-details">
+            <div class="legal-act-subtext">
                 (जन्म-मृत्यु रजिस्ट्रीकरण अधिनियम 1969 की धारा 12/17 एवं उत्तर प्रदेश जन्म मृत्यु रजिस्ट्रीकरण नियमावली 2003 के नियम 8 के अंतर्गत जारी)<br>
                 (Issued under the Section 12/17 of the Registration of Births and Deaths Act 1969 and under rule 8 of Uttar Pradesh, Registration of Births and Deaths Rules 2003)
             </div>
 
-            <div class="divider-dashed"></div>
+            <div class="horizontal-dashed-line"></div>
 
-            <div class="title-badge">
+            <div class="document-type-title">
                 (जन्म प्रमाण पत्र) / (Birth Certificate)
             </div>
 
-            <div class="intro-text">
-                प्रमाणित किया जाता है कि निम्नलिखित सूचना जन्म के मूल अभिलेख से ली गई है जो कि (स्थानीय क्षेत्र) गोरखपुर नगर निगम, राज्य उत्तर प्रदेश के रजिस्टर में अंकित है।<br>
+            <div class="official-declaration-text">
+                प्रमाणित किया जाता है कि निम्नलिखित सूचना जन्म के मूल अभिलेख से ली गई है जो कि गोरखपुर नगर निगम, राज्य उत्तर प्रदेश के रजिस्टर में अंकित है।<br>
                 This is to certify that the following information has been taken from the original record of birth which is in the register for Gorakhpur Municipal Corporation State U.P.
             </div>
 
-            <!-- Form Data Table Rows with Dotted Lines -->
-            <table class="details-table">
+            <table class="data-grid-table">
                 <tr>
-                    <td class="field-label">नाम / Name:</td>
-                    <td class="field-value" id="out_name">PRIYANSHI PRAJAPATI</td>
+                    <td class="label-cell">नाम / Name:</td>
+                    <td class="value-cell" id="view_name">PRIYANSHI PRAJAPATI</td>
                 </tr>
                 <tr>
-                    <td class="field-label">लिंग / Sex:</td>
-                    <td class="field-value" id="out_sex">FEMALE</td>
+                    <td class="label-cell">लिंग / Sex:</td>
+                    <td class="value-cell" id="view_sex">FEMALE</td>
                 </tr>
                 <tr>
-                    <td class="field-label">जन्म का दिनांक एवं स्थान / Date of Birth & Place:</td>
-                    <td class="field-value" id="out_dob">10/03/2025, CHC GORAKHPUR</td>
+                    <td class="label-cell">जन्म का दिनांक एवं स्थान / Date of Birth & Place:</td>
+                    <td class="value-cell" id="view_dob">10/03/2025, CHC GORAKHPUR</td>
                 </tr>
                 <tr>
-                    <td class="field-label">पिता का नाम / Name of Father:</td>
-                    <td class="field-value" id="out_father">SONU KUMAR PRAJAPATI</td>
+                    <td class="label-cell">पिता का नाम / Name of Father:</td>
+                    <td class="value-cell" id="view_father">SONU KUMAR PRAJAPATI</td>
                 </tr>
                 <tr>
-                    <td class="field-label">माता का नाम / Name of Mother:</td>
-                    <td class="field-value" id="out_mother">REETA KUMARI PRAJAPATI</td>
+                    <td class="label-cell">माता का नाम / Name of Mother:</td>
+                    <td class="value-cell" id="view_mother">REETA KUMARI PRAJAPATI</td>
                 </tr>
                 <tr>
-                    <td class="field-label">पंजीकरण संख्या / Registration No:</td>
-                    <td class="field-value" id="out_regno">54831987799111</td>
+                    <td class="label-cell">पंजीकरण संख्या / Registration No:</td>
+                    <td class="value-cell" id="view_regno">54831987799111</td>
                 </tr>
                 <tr>
-                    <td class="field-label">पंजीकरण की तिथि / Date of Registration:</td>
-                    <td class="field-value" id="out_regdate">17-06-2026</td>
+                    <td class="label-cell">पंजीकरण की तिथि / Date of Registration:</td>
+                    <td class="value-cell" id="view_regdate">17-06-2026</td>
                 </tr>
                 <tr>
-                    <td class="field-label">जारी तिथि / Issued Date:</td>
-                    <td class="field-value" id="out_issue">04-07-2026</td>
+                    <td class="label-cell">जारी तिथि / Issued Date:</td>
+                    <td class="value-cell" id="view_issuedate">04-07-2026</td>
                 </tr>
                 <tr>
-                    <td class="field-label">स्थान / जिला / Place/District:</td>
-                    <td class="field-value" id="out_dist">GORAKHPUR, UTTAR PRADESH</td>
+                    <td class="label-cell">स्थान / जिला / Place/District:</td>
+                    <td class="value-cell" id="view_district">GORAKHPUR, UTTAR PRADESH</td>
                 </tr>
             </table>
 
-            <!-- Bottom Footer Setup -->
-            <div class="footer-block">
-                <div class="footer-msg">
-                    प्रत्येक जन्म एवं मृत्यु का पंजीकरण सुनिश्चित करें / Ensure registration of every birth and death
+            <div class="bottom-footer-layout">
+                <div class="footer-left-note">
+                    प्रत्येक जन्म एवं मृत्यु का पंजीकरण सुनिश्चित करें / Ensure registration of every birth and death.
                 </div>
-                <div class="signature-section">
-                    <div class="digital-sign-container">
+                <div class="footer-right-signature">
+                    <div class="digital-signature-box">
                         <strong>Digitally Signed by:</strong><br>
                         DR. AWADHESH KUMAR YADAV<br>
                         उप-रजिस्ट्रार (जन्म एवं मृत्यु)<br>
                         SUB-REGISTRAR (BIRTH & DEATH)<br>
-                        गोरखपुर नगर निगम / GORAKHPUR CORP.
+                        GORAKHPUR MUNICIPAL CORPORATION
                     </div>
                 </div>
             </div>
@@ -337,74 +369,73 @@
         </div>
     </div>
 
-    <!-- Script Logic -->
     <script>
-        // Setup Inputs & Outputs Arrays for Auto-Sync
-        const fieldsMap = [
-            ['in_sno', 'out_sno'],
-            ['in_name', 'out_name'],
-            ['in_sex', 'out_sex'],
-            ['in_dob', 'out_dob'],
-            ['in_father', 'out_father'],
-            ['in_mother', 'out_mother'],
-            ['in_regno', 'out_regno'],
-            ['in_regdate', 'out_regdate'],
-            ['in_issue', 'out_issue'],
-            ['in_dist', 'out_dist']
+        // Mapping elements [Input ID, Output View ID]
+        const inputsMapping = [
+            ['field_sno', 'view_sno'],
+            ['field_name', 'view_name'],
+            ['field_sex', 'view_sex'],
+            ['field_dob', 'view_dob'],
+            ['field_father', 'view_father'],
+            ['field_mother', 'view_mother'],
+            ['field_regno', 'view_regno'],
+            ['field_regdate', 'view_regdate'],
+            ['field_issuedate', 'view_issuedate'],
+            ['field_district', 'view_district']
         ];
 
-        const nameInput = document.getElementById('in_name');
+        const nameInputEle = document.getElementById('field_name');
+        const qrContainerBlock = document.getElementById("live_qr_element");
 
-        // Initialize QR Code Element
-        const qrcodeContainer = document.getElementById("qrcode");
-        let qrGenerator = new QRCode(qrcodeContainer, {
-            text: nameInput.value,
+        // QR Code Initialize (Scans the string present in Name input box)
+        let qrCodeObject = new QRCode(qrContainerBlock, {
+            text: nameInputEle.value,
             width: 75,
             height: 75,
             colorDark : "#000000",
             colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.M
+            correctLevel : QRCode.CorrectLevel.H
         });
 
-        // Sync Text Inputs and Live Update QR Code
-        fieldsMap.forEach(bind => {
-            const txtInput = document.getElementById(bind[0]);
-            const txtOutput = document.getElementById(bind[1]);
+        // Loop to auto-sync text data in real time and refresh QR Code content
+        inputsMapping.forEach(mapGroup => {
+            const uiInput = document.getElementById(mapGroup[0]);
+            const uiOutput = document.getElementById(mapGroup[1]);
             
-            txtInput.addEventListener('input', () => {
-                txtOutput.innerText = txtInput.value;
+            uiInput.addEventListener('input', () => {
+                uiOutput.innerText = uiInput.value;
                 
-                // If Name is changing, refresh QR Code content dynamically
-                if(bind[0] === 'in_name') {
-                    qrGenerator.clear();
-                    qrGenerator.makeCode(txtInput.value);
+                // If the user types inside Name field, regenerate the QR code immediately
+                if(mapGroup[0] === 'field_name') {
+                    qrCodeObject.clear();
+                    qrCodeObject.makeCode(uiInput.value);
                 }
             });
         });
 
-        // Handle Dynamic Local Logo File Upload
-        document.getElementById('image_uploader').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById('logo_preview').src = event.target.result;
+        // Local PC File Image Uploader logic for Logo Area
+        document.getElementById('upload_logo_input').addEventListener('change', function(event) {
+            const selectedFile = event.target.files[0];
+            if (selectedFile) {
+                const imgReader = new FileReader();
+                imgReader.onload = function(e) {
+                    document.getElementById('view_logo_img').src = e.target.result;
                 }
-                reader.readAsDataURL(file);
+                imgReader.readAsDataURL(selectedFile);
             }
         });
 
-        // PDF Exporter Function
-        function exportToPDF() {
-            const targetElement = document.getElementById('cert_canvas');
-            const pdfSettings = {
+        // HTML to A4 PDF Downloading Function
+        function downloadDocumentPDF() {
+            const pdfTarget = document.getElementById('document_capture_area');
+            const renderingOptions = {
                 margin:       0,
-                filename:     'Official_Document.pdf',
+                filename:     'Generated_Report.pdf',
                 image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { scale: 3, useCORS: true }, // high resolution scale
+                html2canvas:  { scale: 3, useCORS: true }, // Crisp HD alignment scaling
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-            html2pdf().set(pdfSettings).from(targetElement).save();
+            html2pdf().set(renderingOptions).from(pdfTarget).save();
         }
     </script>
 </body>
