@@ -753,8 +753,9 @@ cursor:pointer;transition:.2s}
     </g>
     <g id="g169">
   <foreignObject x="292.67187" y="744.99997" width="200" height="30" style="overflow: visible;">
-     <div xmlns="http://www.w3.org/1999/xhtml"
-          contenteditable="true"
+     <div id="regNoMaster"
+     xmlns="http://www.w3.org/1999/xhtml"
+     contenteditable="true"
           style="
              font-variant:normal;
              font-weight:normal;
@@ -1047,8 +1048,9 @@ cursor:pointer;transition:.2s}
     </g>
     <g id="g198">
   <foreignObject x="139.71874" y="95.999996" width="200" height="30" style="overflow: visible;">
-     <div xmlns="http://www.w3.org/1999/xhtml"
-          contenteditable="true"
+    <div id="regNoCopy"
+     xmlns="http://www.w3.org/1999/xhtml"
+     contenteditable="true"
           style="
              font-variant:normal;
              font-weight:700;
@@ -1810,6 +1812,17 @@ oldReset();
 
 }
 
-})();
+// Registration Number Auto Sync
+const regMaster = document.getElementById("regNoMaster");
+const regCopy = document.getElementById("regNoCopy");
+
+function syncRegistrationNo() {
+    if (!regMaster || !regCopy) return;
+    regCopy.innerHTML = regMaster.innerHTML;
+}
+
+syncRegistrationNo();
+
+regMaster.addEventListener("input", syncRegistrationNo);})();
 </script>
 </svg>
