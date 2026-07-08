@@ -1530,17 +1530,94 @@ cursor:pointer;transition:.2s}
            dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.63452131 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.63452059 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.85351497"
            y="0">For Certificate Verification please visit http://www.e-nagarsewaup.gov.in/ulbapps</tspan></text>
     </g>
-    <g
-       id="g248">
-      <image
-         width="1"
-         height="1"
-         style="image-rendering:optimizeSpeed"
-         preserveAspectRatio="none"
-         xlink:href="signature.jpg"
-         transform="matrix(69.999997,0,0,64.999997,654.99997,940.99996)"
-         id="image248" />
-    </g>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const img = document.getElementById("image248");
+    if (!img) return;
+
+    const STORAGE_KEY = "custom_signature_image248";
+
+    // Original Signature
+    const original =
+        img.getAttribute("href") ||
+        img.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+
+    // Restore Saved Signature
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        img.setAttributeNS("http://www.w3.org/1999/xlink", "href", saved);
+        img.setAttribute("href", saved);
+    }
+
+    // Hidden File Picker
+    const picker = document.createElement("input");
+    picker.type = "file";
+    picker.accept = "image/png,image/jpeg,image/webp";
+    picker.style.display = "none";
+    document.body.appendChild(picker);
+
+    // Mouse Pointer
+    img.style.cursor = "pointer";
+
+    // Click on Signature
+    img.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        picker.value = "";
+        picker.click();
+    });
+
+    // Upload Signature
+    picker.addEventListener("change", function () {
+
+        if (!this.files.length) return;
+
+        const file = this.files[0];
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            img.setAttributeNS(
+                "http://www.w3.org/1999/xlink",
+                "href",
+                e.target.result
+            );
+
+            img.setAttribute("href", e.target.result);
+
+            localStorage.setItem(STORAGE_KEY, e.target.result);
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+    // Reset Support
+    const resetBtn = document.getElementById("resetBtn");
+
+    if (resetBtn) {
+
+        resetBtn.addEventListener("click", function () {
+
+            localStorage.removeItem(STORAGE_KEY);
+
+            img.setAttributeNS(
+                "http://www.w3.org/1999/xlink",
+                "href",
+                original
+            );
+
+            img.setAttribute("href", original);
+
+        });
+
+    }
+
+});
+</script>
     <g id="g249">
   <foreignObject x="624.40622" y="1017" width="200" height="30" style="overflow: visible;">
      <div xmlns="http://www.w3.org/1999/xhtml"
