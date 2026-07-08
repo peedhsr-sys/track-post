@@ -1696,42 +1696,117 @@ cursor:pointer;transition:.2s}
 
 // ===== Signature Click Upload =====
 const sig=document.getElementById("image248");
+
 if(sig){
+
 sig.style.cursor="pointer";
+
 const pick=document.createElement("input");
 pick.type="file";
 pick.accept="image/*";
 pick.style.display="none";
 document.body.appendChild(pick);
 
+const parent=sig.parentNode;
+
+let current=parent.querySelector("#customSignature");
+
 const savedSig=localStorage.getItem("signature248");
+
 if(savedSig){
-sig.setAttributeNS("http://www.w3.org/1999/xlink","href",savedSig);
-sig.setAttribute("href",savedSig);
+
+if(current) current.remove();
+
+current=document.createElementNS("http://www.w3.org/2000/svg","image");
+
+current.setAttribute("id","customSignature");
+current.setAttribute("width",sig.getAttribute("width"));
+current.setAttribute("height",sig.getAttribute("height"));
+current.setAttribute("transform",sig.getAttribute("transform"));
+current.setAttribute("preserveAspectRatio",sig.getAttribute("preserveAspectRatio"));
+current.setAttribute("style",sig.getAttribute("style"));
+
+current.setAttributeNS("http://www.w3.org/1999/xlink","href",savedSig);
+current.setAttribute("href",savedSig);
+
+parent.appendChild(current);
+
+sig.style.display="none";
+
+}else{
+
+sig.style.display="";
+
 }
 
-sig.onclick=function(e){
+function enableClick(target){
+
+target.style.cursor="pointer";
+
+target.onclick=function(e){
+
 e.preventDefault();
 e.stopPropagation();
+
+pick.value="";
 pick.click();
+
 };
 
+}
+
+enableClick(current||sig);
+
 pick.onchange=function(){
-if(!this.files.length)return;
+
+if(!this.files.length) return;
+
 const r=new FileReader();
+
 r.onload=function(ev){
-sig.setAttributeNS("http://www.w3.org/1999/xlink","href",ev.target.result);
-sig.setAttribute("href",ev.target.result);
+
 localStorage.setItem("signature248",ev.target.result);
+
+if(current) current.remove();
+
+current=document.createElementNS("http://www.w3.org/2000/svg","image");
+
+current.setAttribute("id","customSignature");
+current.setAttribute("width",sig.getAttribute("width"));
+current.setAttribute("height",sig.getAttribute("height"));
+current.setAttribute("transform",sig.getAttribute("transform"));
+current.setAttribute("preserveAspectRatio",sig.getAttribute("preserveAspectRatio"));
+current.setAttribute("style",sig.getAttribute("style"));
+
+current.setAttributeNS("http://www.w3.org/1999/xlink","href",ev.target.result);
+current.setAttribute("href",ev.target.result);
+
+parent.appendChild(current);
+
+sig.style.display="none";
+
+enableClick(current);
+
 };
+
 r.readAsDataURL(this.files[0]);
+
 };
 
 const oldReset=window.resetEdits;
+
 window.resetEdits=function(){
+
 localStorage.removeItem("signature248");
+
+if(current) current.remove();
+
+sig.style.display="";
+
 oldReset();
+
 };
+
 }
 
 })();
