@@ -1,3 +1,13 @@
+
+<style id="mac-toolbar-style">
+.toolbar button{
+border:none;border-radius:12px;padding:10px 14px;margin:4px;
+font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+background:linear-gradient(#fefefe,#e9e9e9);
+box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 2px 8px rgba(0,0,0,.15);
+cursor:pointer;transition:.2s}
+.toolbar button:hover{transform:translateY(-1px)}
+</style>
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
@@ -1682,4 +1692,4 @@
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        clip-path="url(#clipPath267)" />
   </g>
-</svg>
+<style>.toolbar{position:fixed;top:10px;right:10px;z-index:99999}.toolbar button{margin:2px;padding:8px 12px}@media print{.toolbar{display:none!important}@page{size:A4;margin:5mm;}body{margin:0}}</style><div class="toolbar"><button onclick="window.print()">🖨️ Save as PDF</button><button onclick="saveEdits()">💾 Save</button><button onclick="resetEdits()">↺ Reset</button></div><script>(function(){const els=[...document.querySelectorAll('[contenteditable=true]')];els.forEach((e,i)=>{e.dataset.sid=i;const k='ed_'+i,s=localStorage.getItem(k);if(s!==null)e.innerHTML=s;});window.saveEdits=function(){els.forEach(e=>localStorage.setItem('ed_'+e.dataset.sid,e.innerHTML));alert('Saved');};window.resetEdits=function(){els.forEach(e=>localStorage.removeItem('ed_'+e.dataset.sid));location.reload();};document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()=='s'){e.preventDefault();saveEdits();}});})();</script></svg>
