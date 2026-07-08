@@ -1823,6 +1823,77 @@ function syncRegistrationNo() {
 
 syncRegistrationNo();
 
-regMaster.addEventListener("input", syncRegistrationNo);})();
+regMaster.addEventListener("input", syncRegistrationNo);
+
+// ===== Barcode Auto Update =====
+const barcodeImg = document.getElementById("image197");
+
+function updateBarcode() {
+
+    if (!barcodeImg || !regMaster) return;
+
+    const value = regMaster.innerText.trim();
+
+    if (value === "") return;
+
+    const canvas = document.createElement("canvas");
+
+    JsBarcode(canvas, value, {
+        format: "CODE128",
+        displayValue: false,
+        margin: 0,
+        width: 2,
+        height: 70
+    });
+
+    const data = canvas.toDataURL("image/png");
+
+    barcodeImg.setAttributeNS(
+        "http://www.w3.org/1999/xlink",
+        "href",
+        data
+    );
+
+    barcodeImg.setAttribute("href", data);
+}
+
+updateBarcode();
+
+regMaster.addEventListener("input", updateBarcode);
+
+})();
+
+})();
+   const barcodeImg = document.getElementById("image197");
+
+function updateBarcode(){
+
+    if(!barcodeImg || !regMaster) return;
+
+    const canvas=document.createElement("canvas");
+
+    JsBarcode(canvas,regMaster.innerText.trim(),{
+        format:"CODE128",
+        displayValue:false,
+        margin:0,
+        width:2,
+        height:60
+    });
+
+    const data=canvas.toDataURL("image/png");
+
+    barcodeImg.setAttributeNS(
+        "http://www.w3.org/1999/xlink",
+        "href",
+        data
+    );
+
+    barcodeImg.setAttribute("href",data);
+
+}
+
+updateBarcode();
+
+regMaster.addEventListener("input",updateBarcode);
 </script>
 </svg>
