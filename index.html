@@ -1024,9 +1024,10 @@
            x="0"
            y="0">S.No:</tspan></text>
     </g>
-   <g id="g197">
-  <svg id="barcodeSvg" x="115" y="26" width="140" height="60"></svg>
-</g>
+    <g
+       id="g197">
+      <svg id="barcodeSvg" x="115" y="26" width="140" height="60"></svg>
+    </g>
     <g id="g198">
   <foreignObject x="139.71874" y="95.999996" width="200" height="30" style="overflow: visible;">
      <div xmlns="http://www.w3.org/1999/xhtml"
@@ -1608,27 +1609,19 @@
            style="font-variant:normal;font-weight:700;font-size:10px;font-family:'Times New Roman';writing-mode:lr-tb;fill:#4c20b3;fill-opacity:1;fill-rule:nonzero;stroke:none"
            x="0"
            y="0">)</tspan></text>
-    <g id="g258">
-  <foreignObject x="613.3906" y="1026" width="200" height="30" style="overflow: visible;">
-     <div xmlns="http://www.w3.org/1999/xhtml"
-          contenteditable="true"
-          style="
-             font-variant:normal;
-             font-weight:700;
-             font-size:8px;
-             font-family:'Times New Roman';
-             color:#4c20b3;
-             outline:none;
-             border:none;
-             margin:0;
-             padding:0;
-             line-height:1;
-             white-space:nowrap;
-             display:inline-block;
-             transform: translateY(-0.75em);
-          ">SUB-REGISTRAR (BIRTH &amp; DEATH)</div>
-  </foreignObject>
-</g>
+    </g>
+    <g
+       id="g258">
+      <text
+         id="text259"
+         xml:space="preserve"
+         transform="translate(613.3906,1026)"><tspan
+           id="tspan259"
+           style="font-variant:normal;font-weight:700;font-size:8px;font-family:'Times New Roman';writing-mode:lr-tb;fill:#4c20b3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           x="0"
+           dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.28124985 0 0 0 0 0 0 0 -0.5937503"
+           y="0">SUB-REGISTRAR (BIRTH &amp; DEATH)</tspan></text>
+    </g>
     <g
        id="g259">
       <g
@@ -1682,73 +1675,76 @@
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        clip-path="url(#clipPath267)" />
   </g>
-   <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
-<script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<foreignObject x="0" y="0" width="1" height="1" style="overflow:visible;">
-  <div xmlns="http://www.w3.org/1999/xhtml"
-       style="position:fixed; top:20px; right:20px; z-index:9999;">
-    <button id="fetchDownloadBtn"
-            style="padding:10px 18px; font-size:14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
-      Fetch & Download
-    </button>
-  </div>
-</foreignObject>
+  <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
+  <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script xlink:href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script><![CDATA[
-function getNextBarcodeNumber() {
-  var stored = localStorage.getItem('certCounter');
-  var counter;
-  if (stored === null) {
-    counter = 864;
-  } else {
-    counter = parseInt(stored, 10) + 1;
-  }
-  localStorage.setItem('certCounter', counter);
-  var suffix = counter.toString();
-  while (suffix.length < 3) {
-    suffix = '0' + suffix;
-  }
-  return suffix;
-}
+  <foreignObject x="0" y="0" width="1" height="1" style="overflow:visible;">
+    <div xmlns="http://www.w3.org/1999/xhtml"
+         style="position:fixed; top:20px; right:20px; z-index:9999;">
+      <button id="fetchDownloadBtn"
+              style="padding:10px 18px; font-size:14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+        Fetch &amp; Download
+      </button>
+    </div>
+  </foreignObject>
 
-function renderBarcode() {
-  var base = "10322019030";
-  var suffix = getNextBarcodeNumber();
-  var fullNumber = base + suffix;
-  JsBarcode("#barcodeSvg", fullNumber, {
-    format: "CODE128",
-    lineColor: "#000000",
-    width: 1.3,
-    height: 45,
-    displayValue: true,
-    fontSize: 11,
-    margin: 0
-  });
-  return fullNumber;
-}
+  <script><![CDATA[
+    function getNextBarcodeNumber() {
+      var stored = localStorage.getItem('certCounter');
+      var counter;
+      if (stored === null) {
+        counter = 864;
+      } else {
+        counter = parseInt(stored, 10) + 1;
+      }
+      localStorage.setItem('certCounter', counter);
+      var suffix = counter.toString();
+      while (suffix.length < 3) {
+        suffix = '0' + suffix;
+      }
+      return suffix;
+    }
 
-function downloadCertificatePDF() {
-  html2canvas(document.body, {scale: 2}).then(function(canvas) {
-    var imgData = canvas.toDataURL('image/png');
-    var pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-    var pdfWidth = pdf.internal.pageSize.getWidth();
-    var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save('certificate.pdf');
-  });
-}
+    function renderBarcode() {
+      var base = "10322019030";
+      var suffix = getNextBarcodeNumber();
+      var fullNumber = base + suffix;
+      if (typeof JsBarcode !== 'undefined') {
+        JsBarcode("#barcodeSvg", fullNumber, {
+          format: "CODE128",
+          lineColor: "#000000",
+          width: 1.3,
+          height: 45,
+          displayValue: true,
+          fontSize: 11,
+          margin: 0
+        });
+      }
+      return fullNumber;
+    }
 
-document.addEventListener('DOMContentLoaded', function () {
-  renderBarcode();
-  var btn = document.getElementById('fetchDownloadBtn');
-  if (btn) {
-    btn.addEventListener('click', function () {
+    function downloadCertificatePDF() {
+      html2canvas(document.body, { scale: 2 }).then(function (canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        var pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+        var pdfWidth = pdf.internal.pageSize.getWidth();
+        var pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('certificate.pdf');
+      });
+    }
+
+    window.addEventListener('load', function () {
       renderBarcode();
-      setTimeout(downloadCertificatePDF, 300);
+      var btn = document.getElementById('fetchDownloadBtn');
+      if (btn) {
+        btn.addEventListener('click', function () {
+          renderBarcode();
+          setTimeout(downloadCertificatePDF, 300);
+        });
+      }
     });
-  }
-});
-]]></script>
+  ]]></script>
 </svg>
