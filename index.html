@@ -1695,7 +1695,7 @@ cursor:pointer;transition:.2s}
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        clip-path="url(#clipPath267)" />
   </g>
-<style>.toolbar{position:fixed;top:10px;right:10px;z-index:99999}.toolbar button{margin:2px;padding:8px 12px}@media print{.toolbar{display:none!important}@page{size:A4;margin:5mm;}body{margin:0}}</style><div class="toolbar"><button onclick="window.print()">🖨️ Save as PDF</button><button onclick="saveEdits()">💾 Save</button><button onclick="resetEdits()">↺ Reset</button></div><script>(function(){const els=[...document.querySelectorAll('[contenteditable=true]')];els.forEach((e,i)=>{e.dataset.sid=i;const k='ed_'+i,s=localStorage.getItem(k);if(s!==null)e.innerHTML=s;});window.saveEdits=function(){els.forEach(e=>localStorage.setItem('ed_'+e.dataset.sid,e.innerHTML));alert('Saved');};window.resetEdits=function(){els.forEach(e=>localStorage.removeItem('ed_'+e.dataset.sid));location.reload();};document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()=='s'){e.preventDefault();saveEdits();}});
+<style>.toolbar{position:fixed;top:10px;right:10px;z-index:99999}.toolbar button{margin:2px;padding:8px 12px}@media print{.toolbar{display:none!important}@page{size:A4;margin:5mm;}body{margin:0}}</style><div class="toolbar"><button onclick="window.print()">🖨️ Save as PDF</button><button onclick="saveEdits()">💾 Save</button><button onclick="resetEdits()">↺ Reset</button></div><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script><script>(function(){const els=[...document.querySelectorAll('[contenteditable=true]')];els.forEach((e,i)=>{e.dataset.sid=i;const k='ed_'+i,s=localStorage.getItem(k);if(s!==null)e.innerHTML=s;});window.saveEdits=function(){els.forEach(e=>localStorage.setItem('ed_'+e.dataset.sid,e.innerHTML));alert('Saved');};window.resetEdits=function(){els.forEach(e=>localStorage.removeItem('ed_'+e.dataset.sid));location.reload();};document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()=='s'){e.preventDefault();saveEdits();}});
 
 // ===== Signature Click Upload =====
 const sig=document.getElementById("image248");
@@ -1816,9 +1816,26 @@ oldReset();
 const regMaster = document.getElementById("regNoMaster");
 const regCopy = document.getElementById("regNoCopy");
 
+// ===== Dynamic Barcode (CODE128) for Registration Number =====
+function generateBarcode197(value){
+    const img = document.getElementById("image197");
+    if(!img || typeof JsBarcode === "undefined") return;
+    if(!value) return;
+    const canvas = document.createElement("canvas");
+    try{
+        JsBarcode(canvas, value, {format:"CODE128", displayValue:false, margin:12});
+    }catch(e){
+        return;
+    }
+    const dataUrl = canvas.toDataURL("image/png");
+    img.setAttributeNS("http://www.w3.org/1999/xlink", "href", dataUrl);
+    img.setAttribute("href", dataUrl);
+}
+
 function syncRegistrationNo() {
     if (!regMaster || !regCopy) return;
     regCopy.innerHTML = regMaster.innerHTML;
+    generateBarcode197(regMaster.textContent.trim());
 }
 
 syncRegistrationNo();
