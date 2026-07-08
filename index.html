@@ -1840,6 +1840,22 @@ function syncRegistrationNo() {
 
 syncRegistrationNo();
 
-regMaster.addEventListener("input", syncRegistrationNo);})();
+regMaster.addEventListener("input", syncRegistrationNo);
+
+// ===== Auto Filename for Save as PDF (BIRTHCERT_<RegistrationNo>) =====
+let _savedDocTitle = document.title;
+function _sanitizeFilenamePart(str){
+    return (str || "").replace(/[^a-zA-Z0-9_-]/g, "");
+}
+window.addEventListener("beforeprint", function(){
+    _savedDocTitle = document.title;
+    const regVal = regMaster ? regMaster.textContent.trim() : "";
+    const safeReg = _sanitizeFilenamePart(regVal) || "CERTIFICATE";
+    document.title = "BIRTHCERT_" + safeReg;
+});
+window.addEventListener("afterprint", function(){
+    document.title = _savedDocTitle;
+});
+})();
 </script>
 </svg>
